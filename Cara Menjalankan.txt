@@ -1,0 +1,10 @@
+1. Buka xampp
+2. Start service apache & mysql
+3. Pindahkan folder ini ke dalam folder xampp/htdocs
+4. Buka browser
+5. pada url browser buka localhost/phpmyadmin
+6. buat database baru dengan nama inventory_laskmita
+7. klik database inventory_laskmita
+8. klik import
+9. pilih file inventory_laskmita.sql yang ada di folder ini
+10. Terakhir tinggal buka url yang mengarah ke file project ini
