@@ -24,11 +24,11 @@ if (isset($_GET['idmasuk'])) {
         $stmtUpdate->execute([$barangMasuk['jumlah'], $barangMasuk['idbrg']]);
 
         // Redirect dengan pesan sukses
-        header('Location: ./?pages=barang_masuk&success=' . urlencode("Barang masuk berhasil dihapus."));
+        header('Location: ./?pages=input&success=' . urlencode("Barang masuk berhasil dihapus."));
         exit;
     } else {
         // Redirect dengan pesan error jika data tidak ditemukan
-        header('Location: ./?pages=barang_masuk&error=' . urlencode("Data barang masuk tidak ditemukan."));
+        header('Location: ./?pages=input&error=' . urlencode("Data barang masuk tidak ditemukan."));
         exit;
     }
 }
@@ -86,7 +86,7 @@ $barang_masuk = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
                         <td><?php echo htmlspecialchars($masuk['tgl']); ?></td>
                         <td><?php echo htmlspecialchars($masuk['jumlah']); ?></td>
                         <td>
-                            <a href="./?idmasuk=<?php echo $masuk['idmasuk']; ?>" class="btn btn-danger" onclick="return confirm('Yakin ingin menghapus?');">Hapus</a>
+                            <a href="./?pages=input&idmasuk=<?php echo $masuk['idmasuk']; ?>" class="btn btn-danger" onclick="return confirm('Yakin ingin menghapus?');">Hapus</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>
