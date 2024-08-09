@@ -1,5 +1,19 @@
 <?php
+session_start();
 include ('config.php');
+
+// Logout
+if (isset($_GET['logout'])) {
+  session_destroy();
+  header("Location: login.php");
+  exit();
+}
+
+// Cek apakah user sudah login
+if (!isset($_SESSION['user_id'])) {
+  header("Location: login.php");
+  exit();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -32,30 +46,17 @@ include ('config.php');
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
 
-  <!-- Preloader
-  <div class="preloader flex-column justify-content-center align-items-center">
-    <img class="animation__shake" src="dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">
-  </div> -->
-
   <!-- Navbar -->
   <nav class="main-header navbar navbar-expand navbar-white navbar-light">
-    <!-- Left navbar links -->
     <ul class="navbar-nav">
       <li class="nav-item">
         <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
       </li>
-     
     </ul>
 
-    <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
-          </a>
-          <div class="dropdown-divider"></div>
-         
-      <!-- Notifications Dropdown Menu -->
- 
       <li class="nav-item">
-        <a class="nav-link" data-widget="control-sidebar" data-controlsidebar-slide="true" href="#" role="button">
+        <a class="nav-link" href="?logout=true" role="button">
           <h5>Logout</h5>
         </a>
       </li>
@@ -65,183 +66,157 @@ include ('config.php');
 
   <!-- Main Sidebar Container -->
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
-    <!-- Brand Logo -->
     <a href="./" class="brand-link">
-      <img src="dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-      <span class="brand-text font-weight-light">Laksmita </span>
+      <img src="dist/img/Logo-utama.png" alt="Laksmita Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+      <span class="brand-text font-weight-light">Laksmita</span>
     </a>
 
-    <!-- Sidebar -->
     <div class="sidebar">
-      <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-        <div class="image">
-          <img src="dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
-        </div>
         <div class="info">
-          <a href="#" class="d-block">Alexander Pierce</a>
+          <a href="#" class="d-block">Selamat Datang, <b><?php echo htmlspecialchars($_SESSION['username']); ?> </b>!</a>
         </div>
       </div>
 
-     
-
-      <!-- Sidebar Menu -->
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-          <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
           <li class="nav-item menu-open">
             <a href="#" class="nav-link active">
               <i class="nav-icon fas fa-tachometer-alt"></i>
-              <p>
-                Transaksi
-                <i class="right fas fa-angle-left"></i>
-              </p>
+              <p>Transaksi<i class="right fas fa-angle-left"></i></p>
             </a>
             <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="./index.php?pages=barang" class="nav-link active">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Tambah Barang</p>
-                </a>
-              </li>
+              <?php if ($_SESSION['role'] == 'admin'): ?>
+                <li class="nav-item">
+                  <a href="./index.php?pages=barang" class="nav-link">
+                    <p>Tambah Barang</p>
+                  </a>
+                </li>
+              <?php endif; ?>
               <li class="nav-item">
                 <a href="./index.php?pages=input" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Input barang masuk</p>
+                  <p>Input Barang Masuk</p>
                 </a>
               </li>
               <li class="nav-item">
                 <a href="./index.php?pages=output" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Input barang keluar</p>
+                  <p>Input Barang Keluar</p>
                 </a>
               </li>
               <li class="nav-item">
                 <a href="./index.php?pages=supplier" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
                   <p>Input Supplier</p>
                 </a>
               </li>
             </ul>
           </li>
-          
+        </ul>
       </nav>
-      <!-- /.sidebar-menu -->
     </div>
     <!-- /.sidebar -->
   </aside>
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
     <div class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
             <h1 class="m-0">Dashboard</h1>
-          </div><!-- /.col -->
-        </div><!-- /.row -->
-      </div><!-- /.container-fluid -->
+          </div>
+        </div>
+      </div>
     </div>
     <!-- /.content-header -->
+
+    <!-- Main content -->
     <?php
-    if (isset($_GET['pages'])) {
-        if ($_GET['pages'] == 'barang') {
+    if ($_SESSION['role'] == 'admin') {
+      if (isset($_GET['pages'])) {
+        switch ($_GET['pages']) {
+          case 'barang':
             include './form/form_barang.php';
-        }
-        else if ($_GET['pages'] == 'input') {
+            break;
+          case 'input':
             include './form/form_masuk.php';
-            exit();
-        }
-        else if ($_GET['pages'] == 'output') {
+            break;
+          case 'output':
             include './form/form_keluar.php';
-            exit();
+            break;
+          case 'supplier':
+            include './form/form_supplier.php';
+            break;
         }
-        else if ($_GET['pages'] == 'supplier') {
-          include './form/form_supplier.php';
-          exit();
+      } elseif (isset($_GET['tambah'])) {
+        switch ($_GET['tambah']) {
+          case 'barang':
+            include './form/tambah_barang.php';
+            break;
+          case 'input':
+            include './form/tambah_masuk.php';
+            break;
+          case 'output':
+            include './form/tambah_keluar.php';
+            break;
+          case 'supplier':
+            include './form/tambah_supplier.php';
+            break;
+        }
+      } elseif (isset($_GET['edit'])) {
+        include './form/edit_barang.php';
+      } elseif (isset($_GET['supplier'])) {
+        include './form/edit_supplier.php';
       }
-        
-    }
-    elseif(isset($_GET['tambah'])){
-      if ($_GET['tambah'] == 'barang') {
-        include './form/tambah_barang.php';
-    }
-    else if ($_GET['tambah'] == 'input') {
-        include './form/tambah_masuk.php';
-        exit();
-    }
-    else if ($_GET['tambah'] == 'output') {
-        include './form/tambah_keluar.php';
-        exit();
-    }
-    else if ($_GET['tambah'] == 'supplier') {
-      include './form/tambah_supplier.php';
-      exit();
-  }
-    }
-
-    elseif(isset($_GET['edit'])){
-      include './form/edit_barang.php';
-    }
-    elseif(isset($_GET['supplier'])){
-      include './form/edit_supplier.php';
-    }
-
-    else {
-      
-        echo '<h1 class="text-center">Selamat datang di aplikasi inventory gudang Laskmita</h1>';
-      
+    } elseif ($_SESSION['role'] == 'karyawan') {
+      if (isset($_GET['pages']) && !in_array($_GET['pages'], ['barang', 'edit'])) {
+        switch ($_GET['pages']) {
+          case 'input':
+            include './form/form_masuk.php';
+            break;
+          case 'output':
+            include './form/form_keluar.php';
+            break;
+          case 'supplier':
+            include './form/form_supplier.php';
+            break;
+        }
+      } elseif (isset($_GET['tambah']) && !in_array($_GET['tambah'], ['barang'])) {
+        switch ($_GET['tambah']) {
+          case 'input':
+            include './form/tambah_masuk.php';
+            break;
+          case 'output':
+            include './form/tambah_keluar.php';
+            break;
+          case 'supplier':
+            include './form/tambah_supplier.php';
+            break;
+        }
+      } 
+      else {
+        echo '<h1 class="text-center">Selamat datang di aplikasi inventory gudang Laksmita</h1>';
+      }
+    } else {
+      echo '<h1 class="text-center">Selamat datang di aplikasi inventory gudang Laksmita</h1>';
     }
     ?>
-   
-      </div><!-- /.container-fluid -->
-    </section>
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
+
   <footer class="main-footer">
-    <strong>Copyright &copy; 2024 <a href="./">Laksmita </a>.</strong>
+    <strong>Copyright &copy; 2024 <a href="./">Laksmita</a>.</strong>
     All rights reserved.
   </footer>
 
-  <!-- Control Sidebar -->
-  <aside class="control-sidebar control-sidebar-dark">
-    <!-- Control sidebar content goes here -->
-  </aside>
-  <!-- /.control-sidebar -->
+  <aside class="control-sidebar control-sidebar-dark"></aside>
 </div>
 <!-- ./wrapper -->
 
 <!-- jQuery -->
 <script src="plugins/jquery/jquery.min.js"></script>
-<!-- jQuery UI 1.11.4 -->
-<script src="plugins/jquery-ui/jquery-ui.min.js"></script>
-<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
-<script>
-  $.widget.bridge('uibutton', $.ui.button)
-</script>
 <!-- Bootstrap 4 -->
 <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<!-- ChartJS -->
-<script src="plugins/chart.js/Chart.min.js"></script>
-<!-- Sparkline -->
-<script src="plugins/sparklines/sparkline.js"></script>
-<!-- JQVMap -->
-<script src="plugins/jqvmap/jquery.vmap.min.js"></script>
-<script src="plugins/jqvmap/maps/jquery.vmap.usa.js"></script>
-<!-- jQuery Knob Chart -->
-<script src="plugins/jquery-knob/jquery.knob.min.js"></script>
-<!-- daterangepicker -->
-<script src="plugins/moment/moment.min.js"></script>
-<script src="plugins/daterangepicker/daterangepicker.js"></script>
-<!-- Tempusdominus Bootstrap 4 -->
-<script src="plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
-<!-- Summernote -->
-<script src="plugins/summernote/summernote-bs4.min.js"></script>
-<!-- overlayScrollbars -->
-<script src="plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
 <!-- AdminLTE App -->
 <script src="dist/js/adminlte.js"></script>
 

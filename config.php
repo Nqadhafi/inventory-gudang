@@ -1,5 +1,8 @@
 <?php
 ob_start();
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 $host = 'localhost'; // Ganti dengan host Anda
 $db   = 'inventory_laskmita'; // Ganti dengan nama database Anda
 $user = 'root'; // Ganti dengan username database Anda
