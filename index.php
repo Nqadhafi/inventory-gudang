@@ -193,6 +193,9 @@ if (!isset($_SESSION['user_id'])) {
             break;
         }
       } 
+      elseif (isset($_GET['supplier'])) {
+        include './form/edit_supplier.php';
+      }
       else {
         echo '<h1 class="text-center">Selamat datang di aplikasi inventory gudang Laksmita</h1>';
       }
