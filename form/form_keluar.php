@@ -88,6 +88,7 @@ $barang_keluar = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
                 <?php endforeach; ?>
             </tbody>
         </table>
+        <a href="./form/laporan_keluar.php" class="btn btn-success mb-3" target="_blank">Unduh Laporan PDF</a>
     </div>
 </body>
 </html>
