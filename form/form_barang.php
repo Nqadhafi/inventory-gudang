@@ -1,6 +1,23 @@
 <?php
 include './config.php';
 
+$limit = 5; // Jumlah record per halaman
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$offset = ($page - 1) * $limit;
+
+// Mengambil semua barang dengan limit dan offset untuk pagination
+$sql = "SELECT * FROM barang LIMIT :limit OFFSET :offset";
+$stmt = $pdo->prepare($sql);
+$stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+$stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+$stmt->execute();
+$barangs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Menghitung total barang
+$totalSql = "SELECT COUNT(*) FROM barang";
+$totalItems = $pdo->query($totalSql)->fetchColumn();
+$totalPages = ceil($totalItems / $limit);
+
 // Logika untuk menghapus barang
 if (isset($_GET['idbrg'])) {
     $idbrg = $_GET['idbrg'];
@@ -31,10 +48,6 @@ if (isset($_GET['idbrg'])) {
         }
     }
 }
-
-// Mengambil semua barang
-$sql = "SELECT * FROM barang";
-$barangs = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -63,9 +76,11 @@ $barangs = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
         <?php endif; ?>
 
         <a href="?tambah=barang" class="btn btn-primary mb-3">Tambah Barang</a>
+        <a href="./form/laporan_stok.php" class="btn btn-success mb-3" target="_blank">Unduh Laporan PDF</a>
         <table class="table table-bordered">
             <thead>
                 <tr>
+                    <th>No</th>
                     <th>ID Barang</th>
                     <th>Nama Barang</th>
                     <th>Stok</th>
@@ -75,8 +90,10 @@ $barangs = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
                 </tr>
             </thead>
             <tbody>
+                <?php $no= 1; ?>
                 <?php foreach ($barangs as $barang): ?>
                     <tr>
+                        <td><b><?php echo $no++?>.</b></td>
                         <td><?php echo htmlspecialchars($barang['idbrg']); ?></td>
                         <td><?php echo htmlspecialchars($barang['namabrg']); ?></td>
                         <td><?php echo htmlspecialchars($barang['stok']); ?></td>
@@ -90,7 +107,18 @@ $barangs = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
                 <?php endforeach; ?>
             </tbody>
         </table>
-        <a href="./form/laporan_stok.php" class="btn btn-success mb-3">Unduh Laporan PDF</a>
+
+        <!-- Tautan pagination -->
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                    <li class="page-item <?php echo ($i == $page) ? 'active' : ''; ?>">
+                        <a class="page-link" href="index.php?pages=barang&page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                    </li>
+                <?php endfor; ?>
+            </ul>
+        </nav>
+
     </div>
 </body>
 </html>
