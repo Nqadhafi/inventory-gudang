@@ -45,7 +45,9 @@ if (!isset($_SESSION['user_id'])) {
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
-
+<div class="preloader flex-column justify-content-center align-items-center">
+<img class="animation__shake" src="dist/img/Logo-utama.png" alt="Laksmita Logo" height="120" width="120">
+</div>
   <!-- Navbar -->
   <nav class="main-header navbar navbar-expand navbar-white navbar-light">
     <ul class="navbar-nav">
