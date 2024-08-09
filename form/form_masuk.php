@@ -1,6 +1,23 @@
 <?php
 include './config.php';
 
+$limit = 10; // Jumlah record per halaman
+$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+$offset = ($page - 1) * $limit;
+
+// Mengambil semua barang masuk dengan limit dan offset untuk pagination
+$sql = "SELECT bm.*, b.namabrg, s.nama_supp FROM barang_masuk bm JOIN barang b ON bm.idbrg = b.idbrg JOIN supplier s ON bm.idsupplier = s.idsupplier LIMIT :limit OFFSET :offset";
+$stmt = $pdo->prepare($sql);
+$stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+$stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+$stmt->execute();
+$barang_masuk = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Menghitung total barang masuk
+$totalSql = "SELECT COUNT(*) FROM barang_masuk";
+$totalItems = $pdo->query($totalSql)->fetchColumn();
+$totalPages = ceil($totalItems / $limit);
+
 // Logika untuk menghapus barang masuk
 if (isset($_GET['idmasuk'])) {
     $idmasuk = $_GET['idmasuk'];
@@ -32,10 +49,6 @@ if (isset($_GET['idmasuk'])) {
         exit;
     }
 }
-
-// Mengambil semua barang masuk
-$sql = "SELECT bm.*, b.namabrg, s.nama_supp FROM barang_masuk bm JOIN barang b ON bm.idbrg = b.idbrg JOIN supplier s ON bm.idsupplier = s.idsupplier";
-$barang_masuk = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -64,6 +77,7 @@ $barang_masuk = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
         <?php endif; ?>
 
         <a href="./?tambah=input" class="btn btn-primary mb-3">Tambah Barang Masuk</a>
+        <a href="./form/laporan_masuk.php" class="btn btn-success mb-3" target="_blank">Unduh Laporan PDF</a>
         <table class="table table-bordered">
             <thead>
                 <tr>
@@ -92,7 +106,19 @@ $barang_masuk = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
                 <?php endforeach; ?>
             </tbody>
         </table>
-        <a href="./form/laporan_masuk.php" class="btn btn-success mb-3" target="_blank">Unduh Laporan PDF</a>
+
+        <!-- Tautan pagination -->
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                    <li class="page-item <?php echo ($i == $page) ? 'active' : ''; ?>">
+                        <a class="page-link" href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                    </li>
+                <?php endfor; ?>
+            </ul>
+        </nav>
+
+        
     </div>
 </body>
 </html>
