@@ -90,6 +90,7 @@ $barangs = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
                 <?php endforeach; ?>
             </tbody>
         </table>
+        <a href="./form/laporan_stok.php" class="btn btn-success mb-3">Unduh Laporan PDF</a>
     </div>
 </body>
 </html>
