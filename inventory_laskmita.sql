@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 09, 2024 at 05:07 AM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- Generation Time: Aug 10, 2024 at 04:10 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -40,17 +40,17 @@ CREATE TABLE `barang` (
 --
 
 INSERT INTO `barang` (`idbrg`, `namabrg`, `stok`, `stock_awal`, `rata_rata`) VALUES
-(10, 'Krim pagi', 20, 0, 0.00),
-(11, 'Krim malam', 23, 0, 0.00),
-(12, 'Facial Wash', 0, 0, 0.00),
-(13, 'Toner', -5, 0, 0.00),
-(14, 'Serum', 0, 0, 0.00),
-(15, 'Handbody', 0, 0, 0.00),
-(16, 'Hair Serum', 0, 0, 0.00),
-(17, 'Bedak Tabur', 0, 0, 0.00),
-(18, 'Sunscreen', 0, 0, 0.00),
-(19, 'Salep', 0, 0, 0.00),
-(20, 'Obat Minum', 0, 0, 0.00);
+(23, 'Krim pagi', 270, 0, 0.00),
+(24, '⁠krim malam', 0, 0, 0.00),
+(25, '⁠Facial Wash', 0, 0, 0.00),
+(26, 'toner', 0, 0, 0.00),
+(27, 'serum', 0, 0, 0.00),
+(28, 'handbody', 0, 0, 0.00),
+(29, '⁠hair serum', 0, 0, 0.00),
+(30, 'bedak tabur', 0, 0, 0.00),
+(31, 'Sunscreen', 0, 0, 0.00),
+(32, 'salep', 0, 0, 0.00),
+(33, 'obat minum', 0, 0, 0.00);
 
 -- --------------------------------------------------------
 
@@ -64,6 +64,13 @@ CREATE TABLE `barang_keluar` (
   `jumlah` int(11) NOT NULL,
   `tgl` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `barang_keluar`
+--
+
+INSERT INTO `barang_keluar` (`idkeluar`, `idbrg`, `jumlah`, `tgl`) VALUES
+(6, 23, 30, '2024-08-10');
 
 -- --------------------------------------------------------
 
@@ -80,6 +87,13 @@ CREATE TABLE `barang_masuk` (
   `jumlah` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `barang_masuk`
+--
+
+INSERT INTO `barang_masuk` (`idmasuk`, `idbrg`, `idsupplier`, `jabatan`, `tgl`, `jumlah`) VALUES
+(8, 23, 8, 'Admin', '2024-08-11', 300);
+
 -- --------------------------------------------------------
 
 --
@@ -91,6 +105,13 @@ CREATE TABLE `supplier` (
   `nama_supp` varchar(100) NOT NULL,
   `nohp` varchar(15) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `supplier`
+--
+
+INSERT INTO `supplier` (`idsupplier`, `nama_supp`, `nohp`) VALUES
+(8, 'PT. Cantika Farma', '081245333111');
 
 -- --------------------------------------------------------
 
@@ -158,25 +179,25 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `barang`
 --
 ALTER TABLE `barang`
-  MODIFY `idbrg` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `idbrg` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `barang_keluar`
 --
 ALTER TABLE `barang_keluar`
-  MODIFY `idkeluar` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `idkeluar` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `barang_masuk`
 --
 ALTER TABLE `barang_masuk`
-  MODIFY `idmasuk` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `idmasuk` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `supplier`
 --
 ALTER TABLE `supplier`
-  MODIFY `idsupplier` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `idsupplier` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `users`
